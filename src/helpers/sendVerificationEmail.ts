@@ -19,10 +19,10 @@ export async function sendVerificationEmail(
       port: 587, // Recommended port for STARTTLS
       secure: false, // Use STARTTLS, not SSL directly
       auth: {
-        user: '84b7cf001@smtp-brevo.com', // Your Sendinblue login email (not Gmail)
-        pass: "xsmtpsib-8d81e9821899d7efba4d4af73560cb675f3c152afea236c26f28f96695ea3d83-JZsWaj0h9OE2KSqB" // Your SMTP API key from Sendinblue
+        user: process.env.MAIL_USER , // Your Sendinblue login email (not Gmail)
+        pass: process.env.MAIL_PASS // Your SMTP API key from Sendinblue
       }
-    });
+    });   
 
     const templatePath = path.join(process.cwd(), 'public', 'email-template.html');
     let emailTemplate = fs.readFileSync(templatePath, 'utf-8');
