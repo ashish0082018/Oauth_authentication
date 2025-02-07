@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(cuid())  // Change to Int for auto-incrementing IDs
+  name          String?
+  email         String?   @unique
+  image         String?
+  password      String?
+  verifyCode    String?
+  verifyCodeExpiry DateTime?
+  isVerified    Boolean?  @default(false)
+  emailVerified DateTime?
+  profiles      Profile[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Profile {
+  id          String       @id @default(cuid()) // Change to Int for auto-incrementing IDs
+  slug       String   @unique
+  authorId   String      // Foreign key reference to User, change to Int
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  image      String
+  name       String
+  message    String
+  link       Json
+}
+
+model Account {
+  id                 String       @id @default(cuid())  // Change to Int for auto-incrementing IDs
+  userId            String     // Foreign key reference to User, change to Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? 
+  access_token      String? 
+  expires_at        Int?    
+  token_type        String? 
+  scope             String? 
+  id_token          String? 
+  session_state     String? 
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String       @id @default(cuid())  // Change to Int for auto-incrementing IDs
+  sessionToken String   @unique
+  userId       String      // Foreign key reference to User, change to Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+
+//   @@unique([identifier, token])
+// }
