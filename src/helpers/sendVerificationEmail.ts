@@ -31,7 +31,7 @@ export async function sendVerificationEmail(
     emailTemplate = emailTemplate.replace('${username}', username).replace('${verifyCode}', verifyCode);
 
     const mailOptions = {
-      from: 'av0082020@gmail.com', // Use a verified email address here
+      from: process.env.SEND_EMAIL, // Use a verified email address here
       to: email,
       subject: "Verification Code",
       html: emailTemplate
